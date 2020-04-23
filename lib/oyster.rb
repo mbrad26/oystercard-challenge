@@ -1,11 +1,11 @@
 class Oyster
-  attr_reader :balance
+  attr_reader :balance, :entry_station
   MAX_LIMIT = 90
   FARE = 1
 
   def initialize
     @balance = 0
-    @in_use = false
+    @entry_station = nil
   end
 
   def top_up(amount)
@@ -13,18 +13,18 @@ class Oyster
     @balance += amount
   end
 
-  def touch_in
+  def touch_in(entry_station)
     raise 'Insufficient funds!' if balance < FARE
-    @in_use = true
+    @entry_station = entry_station
   end
 
   def touch_out
     deduct(FARE)
-    @in_use = false
+    @entry_station = nil
   end
 
   def in_journey?
-    @in_use
+    @entry_station
   end
 
   private

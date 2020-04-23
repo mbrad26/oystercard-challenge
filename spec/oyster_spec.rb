@@ -2,6 +2,7 @@ require 'oyster'
 
 describe Oyster do
   let(:fare){ Oyster::FARE }
+  let(:entry_station){ double :station }
 
   it 'has a balance of zero' do
     expect(subject.balance).to eq 0
@@ -21,7 +22,7 @@ describe Oyster do
     it 'has a maximum limit' do
       limit = Oyster::MAX_LIMIT
       subject.top_up(limit)
-      expect{ subject.top_up(1) }.to raise_error "Maximum limit reached!"
+      expect{ subject.top_up(fare) }.to raise_error "Maximum limit reached!"
     end
   end
 
@@ -30,13 +31,19 @@ describe Oyster do
 
     it 'can touch in' do
       subject.top_up(fare)
-      subject.touch_in
+      subject.touch_in(entry_station)
       expect(subject).to be_in_journey
+    end
+
+    it 'can remember the entry station' do
+      subject.top_up(fare)
+      subject.touch_in(entry_station)
+      expect(subject.entry_station).to eq entry_station
     end
 
     context 'when insufiicient funds' do
       it 'raises an error' do
-        expect{ subject.touch_in }.to raise_error 'Insufficient funds!'
+        expect{ subject.touch_in(entry_station) }.to raise_error 'Insufficient funds!'
       end
     end
   end
@@ -44,7 +51,7 @@ describe Oyster do
   describe '#touch_out' do
     before do
       subject.top_up(fare)
-      subject.touch_in
+      subject.touch_in(entry_station)
     end
 
     it { is_expected.to respond_to(:touch_out) }
