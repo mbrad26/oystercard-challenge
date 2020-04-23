@@ -1,11 +1,12 @@
 class Oyster
-  attr_reader :balance, :entry_station
+  attr_reader :balance, :entry_station, :journeys
   MAX_LIMIT = 90
   FARE = 1
 
   def initialize
     @balance = 0
     @entry_station = nil
+    @journeys = Array.new
   end
 
   def top_up(amount)
@@ -18,7 +19,7 @@ class Oyster
     @entry_station = entry_station
   end
 
-  def touch_out
+  def touch_out(exit_station)
     deduct(FARE)
     @entry_station = nil
   end

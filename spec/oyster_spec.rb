@@ -3,6 +3,7 @@ require 'oyster'
 describe Oyster do
   let(:fare){ Oyster::FARE }
   let(:entry_station){ double :station }
+  let(:exit_station){ double :station}
 
   it 'has a balance of zero' do
     expect(subject.balance).to eq 0
@@ -10,6 +11,10 @@ describe Oyster do
 
   it 'is initialy not in journey' do
     expect(subject).not_to be_in_journey
+  end
+
+  it 'stores all journeys in a list' do
+    expect(subject.journeys).to be_instance_of Array
   end
 
   describe '#top_up' do
@@ -54,16 +59,16 @@ describe Oyster do
       subject.touch_in(entry_station)
     end
 
-    it { is_expected.to respond_to(:touch_out) }
+    it { is_expected.to respond_to(:touch_out).with(1).argument }
 
     it 'can touch out' do
-      subject.touch_out
+      subject.touch_out(exit_station)
       expect(subject).not_to be_in_journey
     end
 
     context 'when journey is complete' do
       it 'deducts the fare' do
-        expect{ subject.touch_out }.to change{ subject.balance }.by -fare
+        expect{ subject.touch_out(exit_station) }.to change{ subject.balance }.by -fare
       end
     end
   end
