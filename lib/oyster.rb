@@ -9,12 +9,12 @@ class Oyster
   end
 
   def top_up(amount)
-    raise "Maximum limit reached!" if @balance + amount > MAX_LIMIT
+    raise "Maximum limit reached!" if balance + amount > MAX_LIMIT
     @balance += amount
   end
 
   def touch_in
-    raise 'Insufficient funds!' if @balance < FARE
+    raise 'Insufficient funds!' if balance < FARE
     @in_use = true
   end
 
@@ -28,7 +28,7 @@ class Oyster
   end
 
   private
-  
+
   def deduct(fare)
     @balance -= fare
   end

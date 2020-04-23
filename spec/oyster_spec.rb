@@ -1,6 +1,7 @@
 require 'oyster'
 
 describe Oyster do
+  let(:fare){ Oyster::FARE }
 
   it 'has a balance of zero' do
     expect(subject.balance).to eq 0
@@ -24,19 +25,11 @@ describe Oyster do
     end
   end
 
-  # describe '#deduct' do
-  #   it { is_expected.to respond_to(:deduct).with(1).argument }
-  #
-  #   it 'cand deduct the fare from balance' do
-  #     expect{ subject.deduct(1) }.to change{ subject.balance }.by -1
-  #   end
-  # end
-
   describe '#touch_in' do
     it { is_expected.to respond_to(:touch_in) }
 
     it 'can touch in' do
-      subject.top_up(Oyster::FARE)
+      subject.top_up(fare)
       subject.touch_in
       expect(subject).to be_in_journey
     end
@@ -49,20 +42,20 @@ describe Oyster do
   end
 
   describe '#touch_out' do
+    before do
+      subject.top_up(fare)
+      subject.touch_in
+    end
+
     it { is_expected.to respond_to(:touch_out) }
 
     it 'can touch out' do
-      subject.top_up(Oyster::FARE)
-      subject.touch_in
       subject.touch_out
       expect(subject).not_to be_in_journey
     end
 
     context 'when journey is complete' do
       it 'deducts the fare' do
-        fare = Oyster::FARE
-        subject.top_up(fare)
-        subject.touch_in
         expect{ subject.touch_out }.to change{ subject.balance }.by -fare
       end
     end
