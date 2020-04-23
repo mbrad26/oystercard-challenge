@@ -13,20 +13,23 @@ class Oyster
     @balance += amount
   end
 
-  def deduct(fare)
-    @balance -= fare
-  end
-
   def touch_in
     raise 'Insufficient funds!' if @balance < FARE
     @in_use = true
   end
 
   def touch_out
+    deduct(FARE)
     @in_use = false
   end
 
   def in_journey?
     @in_use
+  end
+
+  private
+  
+  def deduct(fare)
+    @balance -= fare
   end
 end

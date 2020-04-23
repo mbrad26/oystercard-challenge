@@ -24,13 +24,13 @@ describe Oyster do
     end
   end
 
-  describe '#deduct' do
-    it { is_expected.to respond_to(:deduct).with(1).argument }
-
-    it 'cand deduct the fare from balance' do
-      expect{ subject.deduct(1) }.to change{ subject.balance }.by -1
-    end
-  end
+  # describe '#deduct' do
+  #   it { is_expected.to respond_to(:deduct).with(1).argument }
+  #
+  #   it 'cand deduct the fare from balance' do
+  #     expect{ subject.deduct(1) }.to change{ subject.balance }.by -1
+  #   end
+  # end
 
   describe '#touch_in' do
     it { is_expected.to respond_to(:touch_in) }
@@ -56,6 +56,15 @@ describe Oyster do
       subject.touch_in
       subject.touch_out
       expect(subject).not_to be_in_journey
+    end
+
+    context 'when journey is complete' do
+      it 'deducts the fare' do
+        fare = Oyster::FARE
+        subject.top_up(fare)
+        subject.touch_in
+        expect{ subject.touch_out }.to change{ subject.balance }.by -fare
+      end
     end
   end
 end
