@@ -1,9 +1,11 @@
 class Oyster
   attr_reader :balance
   MAX_LIMIT = 90
+  FARE = 1
 
   def initialize
     @balance = 0
+    @in_use = false
   end
 
   def top_up(amount)
@@ -13,5 +15,18 @@ class Oyster
 
   def deduct(fare)
     @balance -= fare
+  end
+
+  def touch_in
+    raise 'Insufficient funds!' if @balance < FARE
+    @in_use = true
+  end
+
+  def touch_out
+    @in_use = false
+  end
+
+  def in_journey?
+    @in_use
   end
 end
