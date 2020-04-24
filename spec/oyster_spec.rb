@@ -18,8 +18,6 @@ describe Oyster do
   end
 
   describe '#top_up' do
-    it { is_expected.to respond_to(:top_up).with(1).argument }
-
     it 'can add money to the balance' do
       expect{ subject.top_up(5) }.to change{ subject.balance }.by 5
     end
@@ -32,8 +30,6 @@ describe Oyster do
   end
 
   describe '#touch_in' do
-    it { is_expected.to respond_to(:touch_in) }
-
     it 'can touch in' do
       subject.top_up(fare)
       subject.touch_in(entry_station)
@@ -48,7 +44,8 @@ describe Oyster do
 
     context 'when insufiicient funds' do
       it 'raises an error' do
-        expect{ subject.touch_in(entry_station) }.to raise_error 'Insufficient funds!'
+        expect{ subject.touch_in(entry_station) }
+        .to raise_error 'Insufficient funds!'
       end
     end
   end
@@ -59,17 +56,31 @@ describe Oyster do
       subject.touch_in(entry_station)
     end
 
-    it { is_expected.to respond_to(:touch_out).with(1).argument }
-
     it 'can touch out' do
       subject.touch_out(exit_station)
       expect(subject).not_to be_in_journey
     end
 
+    it 'stores exit station' do
+      subject.touch_in(entry_station)
+      subject.touch_out(exit_station)
+      expect(subject.exit_station).to eq exit_station
+    end
+
     context 'when journey is complete' do
       it 'deducts the fare' do
-        expect{ subject.touch_out(exit_station) }.to change{ subject.balance }.by -fare
+        expect{ subject.touch_out(exit_station) }
+        .to change{ subject.balance }.by -fare
       end
+    end
+  end
+
+  context 'when touching in and out' do
+    it 'creates a journey' do
+      subject.top_up(fare)
+      subject.touch_in(entry_station)
+      expect{ subject.touch_out(exit_station) }.to change{subject.journeys}
+      .to include({entry_station: entry_station, exit_station: exit_station})
     end
   end
 end
