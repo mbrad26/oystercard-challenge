@@ -4,6 +4,7 @@ describe Oyster do
   let(:fare){ Oyster::FARE }
   let(:entry_station){ double :station }
   let(:exit_station){ double :station}
+  let(:journey){ {entry_station: entry_station, exit_station: exit_station} }
 
   it 'has a balance of zero' do
     expect(subject.balance).to eq 0
@@ -79,8 +80,9 @@ describe Oyster do
     it 'creates a journey' do
       subject.top_up(fare)
       subject.touch_in(entry_station)
-      expect{ subject.touch_out(exit_station) }.to change{subject.journeys}
-      .to include({entry_station: entry_station, exit_station: exit_station})
+      expect{ subject.touch_out(exit_station) }
+      .to change{subject.journeys}
+      .to include journey
     end
   end
 end
