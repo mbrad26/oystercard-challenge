@@ -1,5 +1,5 @@
 class Oyster
-  attr_reader :balance, :entry_station, :journeys, :exit_station
+  attr_reader :balance, :entry_station, :journeys#, :exit_station
   MAX_LIMIT = 90
   FARE = 1
 
@@ -21,7 +21,7 @@ class Oyster
 
   def touch_out(exit_station)
     deduct(FARE)
-    @exit_station = exit_station
+    # @exit_station = exit_station
     @journeys << {entry_station: entry_station, exit_station: exit_station}
     @entry_station = nil
   end

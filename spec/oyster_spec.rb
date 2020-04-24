@@ -62,11 +62,11 @@ describe Oyster do
       expect(subject).not_to be_in_journey
     end
 
-    it 'stores exit station' do
-      subject.touch_in(entry_station)
-      subject.touch_out(exit_station)
-      expect(subject.exit_station).to eq exit_station
-    end
+    # it 'stores exit station' do
+    #   subject.touch_in(entry_station)
+    #   subject.touch_out(exit_station)
+    #   expect(subject.exit_station).to eq exit_station
+    # end
 
     context 'when journey is complete' do
       it 'deducts the fare' do
